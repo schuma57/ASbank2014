@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- ************************************************************ -->
+	<!-- * Fichier de configuration utilisé par le framework SPRING * -->
+	<!-- ************************************************************ -->
+
+	<!-- la classe d'accès aux données simulée
+	<bean id="myBackEnd" singleton="true" class="com.iut.bank.dao.DAO_BackEnd">
+	</bean> -->
+	
+	<!-- la classe d'accès aux données sur serveur SQL : -->  
+	<bean id="sqlBackEnd" singleton="true" class="com.iut.bank.dao.Dao">
+		<constructor-arg>
+			<ref bean="dataSource" />
+		</constructor-arg>	
+	</bean>
+	
+	<!-- Configuration du DATA Source -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/projectBank" />
+		<property name="username" value="root" />
+		<property name="password" value="adminpwd" />
+	</bean> 
+	
+	<!-- Le vrai accès aux données : -->
+	<bean id="backEndFactory" class="com.iut.bank.factories.BackEndFactory">
+		<property name="myDb">
+			<!-- Injection du back - end dans le constructeur de la factory  -->
+			<ref bean="sqlBackEnd" />
+		</property>
+	</bean>
+	
+	<!-- Utilisée pour les tests unitaires : -->
+	<!--<bean id="backEndTestFactory" class="com.iut.bank.factories.BackEndFactory">
+		<property name="myDb">
+			<ref bean="myBackEnd" />
+		</property>
+	</bean>-->
+</beans>
